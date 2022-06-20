@@ -1,10 +1,10 @@
 require 'rails_helper'
 
-describe 'Rentals API', focus: true do
+describe 'Rentals API' do
   let(:api_user) { create(:user) }
   let(:other_api_user) { create(:user) }
 
-  describe 'GET #index'  do
+  describe 'GET #index', focus: true  do
     it 'should require a valid api_user' do
       get '/api/rentals', xhr: true
 
@@ -13,20 +13,20 @@ describe 'Rentals API', focus: true do
 
     context 'when authenticated as api_user' do
       before do
-        5.times { |_i| create(:rentals, owner: api_user) }
+        5.times { |_i| create(:rental, owner: api_user) }
         login_as api_user
       end
 
       it 'should list all rentals owned by the api_user' do
-        get '/api/rentals', xhr: true
+        get "/api/rentals?api_key=#{api_user.api_key}", xhr: true
 
         expect(response.status).to eql(200)
-        expect(json.size).to eql(5)
+        expect(JSON.parse(response.body).size).to eql(5)
       end
 
       it 'should not list rentals that are not owned by the other_api_user' do
         api_user.rentals.last.update(owner: other_api_user)
-        get '/api/rentals', xhr: true
+        get "/api/rentals?api_key=#{api_user.api_key}", xhr: true
 
         expect(response.status).to eql(200)
         expect(json.size).to eql(4)

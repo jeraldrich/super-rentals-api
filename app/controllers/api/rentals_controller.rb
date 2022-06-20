@@ -1,5 +1,5 @@
-class RentalsController < ApplicationController
-  before_action :set_rental, only: [:show, :destroy]
+class Api::RentalsController < Api::ApplicationController
+  # before_action :set_rental, only: [:show, :destroy]
   # TODO: Implement once api check implemented.
   # before_action :check_api_key_authorized
 
@@ -8,6 +8,11 @@ class RentalsController < ApplicationController
     @rentals = Rental.where(owner: api_user)
   
     render json: @rentals, each_serializer: RentalsSerializer
+  end
+
+  # GET /api/rentals/1
+  def show
+    render json: @rental
   end
 
   # POST /api/rentals
@@ -22,7 +27,7 @@ class RentalsController < ApplicationController
   # DELETE /api/rentals/1
   def destroy
     if @rental.destroy!
-      render json: { status: 422, message: 'Rental successfully deleted.' }, status: 422
+      render json: { status: 422, message: 'Rental successfully deleted.' }, status: 200
     else
       render json: { status: 422, message: 'Failed to delete rental.' }, status: 422
     end

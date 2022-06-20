@@ -3,6 +3,7 @@ Rails.application.routes.draw do
 
   # Api routes.
   namespace :api do
-    resource :rentals, only: %i[create update]
+    resource :rentals, only: %i[index show create update destroy]
   end
+
 end

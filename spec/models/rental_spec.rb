@@ -16,10 +16,14 @@
 #  updated_at     :datetime         not null
 #
 
-class Rental < ApplicationRecord
-  belongs_to :owner, class_name: 'User', foreign_key: :user_id
+require 'rails_helper'
 
-  validates_presence_of :title
-  validates_presence_of :city
-  validates_presence_of :street_address
+describe Rental do
+  let!(:rental) { create(:rental) }
+
+  # it { should belong_to(:owner) }
+
+  it { should validate_presence_of(:title) }
+  it { should validate_presence_of(:city) }
+  it { should validate_presence_of(:street_address) }
 end

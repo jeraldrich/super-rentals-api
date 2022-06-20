@@ -16,10 +16,7 @@
 #  updated_at     :datetime         not null
 #
 
-class Rental < ApplicationRecord
-  belongs_to :owner, class_name: 'User', foreign_key: :user_id
-
-  validates_presence_of :title
-  validates_presence_of :city
-  validates_presence_of :street_address
+# TODO: Switch this to json-rb to follow json api spec.
+class RentalSerializer < ApplicationSerializer
+  attributes :title, :city, :location, :category, :image, :street_address, :bedrooms, :description, :created_at, :updated_at
 end

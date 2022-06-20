@@ -20,7 +20,7 @@ require 'factory_bot_rails'
 require 'rspec/collection_matchers'
 
 # Auto require all files and directories in support.
-Dir[Rails.root.join('spec/support/**/*.rb')].sort.each { |f| require f }
+Dir[Rails.root.join('spec/support/*.rb')].sort.each { |f| require f }
 
 # Checks for pending migration and applies them before tests are run.
 # If you are not using ActiveRecord, you can remove this line.
@@ -29,8 +29,8 @@ ActiveRecord::Migration.maintain_test_schema!
 RSpec.configure do |config|
   config.fail_fast = false
   config.include FactoryBot::Syntax::Methods
-  config.include Features, type: :feature
-  config.include Requests::JsonHelpers, type: :request
+  # config.include Features, type: :feature
+  # config.include Requests::JsonHelpers, type: :request
   config.include Devise::TestHelpers, type: :controller
   config.include Warden::Test::Helpers
   config.include Rails.application.routes.url_helpers
