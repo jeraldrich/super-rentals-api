@@ -1,14 +1,14 @@
 require 'rails_helper'
 
-describe 'Rentals API' do
+describe 'Rentals API', focus: true do
   let(:api_user) { create(:user) }
   let(:other_api_user) { create(:user) }
 
-  describe 'GET #index', focus: true  do
+  describe 'GET #index'  do
     it 'should require a valid api_user' do
       get '/api/rentals', xhr: true
 
-      expect(response.status).to eq 401
+      expect(response.status).to eq 422
     end
 
     context 'when authenticated as api_user' do
@@ -29,7 +29,35 @@ describe 'Rentals API' do
         get "/api/rentals?api_key=#{api_user.api_key}", xhr: true
 
         expect(response.status).to eql(200)
-        expect(json.size).to eql(4)
+        expect(JSON.parse(response.body).size).to eql(4)
+      end
+    end
+  end
+
+  describe 'GET #show'  do
+    let(:rental) { create(:rental) }
+    let!(:rental_owner) { rental.owner }
+
+    it 'should require a valid api_user' do
+      get '/api/rentals', xhr: true
+
+      expect(response.status).to eq 422
+    end
+
+    context 'when authenticated as api_user' do
+      it 'should show rental owned by the api_user' do
+        get "/api/rentals/#{rental.id}?api_key=#{rental_owner.api_key}", xhr: true
+
+        expect(response.status).to eql(200)
+      end
+
+      it 'should not show rental that is owned by the other_api_user' do
+        rental.update!(owner: other_api_user)
+        expect(api_user.reload.rentals.size).to eql(0)
+        expect(other_api_user.reload.rentals.size).to eql(1)
+
+        get "/api/rentals/#{rental.id}?api_key=#{rental_owner.api_key}", xhr: true
+        expect(response.status).to be 422
       end
     end
   end
@@ -37,7 +65,7 @@ describe 'Rentals API' do
   describe 'POST #create' do
     it 'should require a valid api_user' do
       post '/api/rentals'
-      expect(response).to have_http_status(302)
+      expect(response).to have_http_status(422)
     end
 
     context 'when authenticated as api_user' do
@@ -46,13 +74,14 @@ describe 'Rentals API' do
       end
 
       it 'creates new rental' do
-        post '/api/rentals', xhr: true, params: { rental:
-          { title: 'new rental test', city: 'dallas', location: 'dallas, tx 123 muffin lane',
-            category: 'two_bedroom', bedrooms: 2, description: 'great deal' } }
+        post "/api/rentals?api_key=#{api_user.api_key}", xhr: true, params: {
+         title: 'new rental test', city: 'dallas', location: 'dallas, tx 123 muffin lane',
+         category: 'two_bedroom', bedrooms: 2, description: 'great deal', street_address: '123 muffin ln'
+        }
 
         expect(response.status).to eql(200)
-        expect(api_user.rentals.size).to eql(1)
-        expect(other_api_user.rentals.size).to eql(0)
+        expect(api_user.reload.rentals.size).to eql(1)
+        expect(other_api_user.reload.rentals.size).to eql(0)
       end
     end
   end
@@ -63,7 +92,7 @@ describe 'Rentals API' do
 
     it 'should require a valid api_user' do
       get '/api/rentals', xhr: true
-      expect(response.status).to eq 401
+      expect(response.status).to eq 422
     end
 
     context 'when authenticated as api_user' do
@@ -75,9 +104,9 @@ describe 'Rentals API' do
         rental.update!(owner: api_user)
         expect(api_user.reload.rentals.size).to eql(1)
 
-        delete "/api/rentals/#{rental.id}", xhr: true
+        delete "/api/rentals/#{rental.id}?api_key=#{api_user.api_key}", xhr: true
         expect(response.status).to be 200
-        expect(api_user.reload.rentals.size).to eql(1)
+        expect(api_user.reload.rentals.size).to eql(0)
       end
 
       it 'should not delete a rental that is not owned by the api_user' do
@@ -85,9 +114,9 @@ describe 'Rentals API' do
         expect(api_user.reload.rentals.size).to eql(0)
         expect(other_api_user.reload.rentals.size).to eql(1)
 
-        delete "/api/rentals/#{rental.id}", xhr: true
-        expect(response.status).to be 401
-        expect(api_user.reload.rentals.size).to eql(1)
+        delete "/api/rentals/#{rental.id}?api_key=#{api_user.api_key}", xhr: true
+        expect(response.status).to be 422
+        expect(other_api_user.reload.rentals.size).to eql(1)
       end
     end
   end

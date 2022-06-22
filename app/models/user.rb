@@ -37,7 +37,7 @@ class User < ApplicationRecord
 
   private
 
-  def hash_id
+  def create_api_key
     hashids = Hashids.new Rails.application.secrets.secret_key_base
     self.api_key = hashids.encode id
     save!

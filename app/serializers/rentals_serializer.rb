@@ -17,6 +17,6 @@
 #
 
 # TODO: Switch this to json-rb to follow json api spec.
-class RentalSerializer < ApplicationSerializer
+class RentalsSerializer < ApplicationSerializer
   attributes :title, :city, :location, :category, :image, :street_address, :bedrooms, :description, :created_at, :updated_at
 end
