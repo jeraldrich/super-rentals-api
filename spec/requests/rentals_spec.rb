@@ -34,7 +34,7 @@ describe 'Rentals API', focus: true do
     end
   end
 
-  describe 'GET #show'  do
+  describe 'GET #show' do
     let(:rental) { create(:rental) }
     let!(:rental_owner) { rental.owner }
 

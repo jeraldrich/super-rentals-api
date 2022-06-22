@@ -16,7 +16,8 @@
 #  updated_at     :datetime         not null
 #
 
-# TODO: Switch this to json-rb to follow json api spec.
-class RentalsSerializer < ApplicationSerializer
+class RentalSerializer < JSONAPI::Serializable::Resource
+  type 'rentals'
+
   attributes :title, :city, :location, :category, :image, :street_address, :bedrooms, :description, :created_at, :updated_at
 end

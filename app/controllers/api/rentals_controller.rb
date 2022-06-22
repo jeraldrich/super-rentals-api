@@ -7,12 +7,13 @@ class Api::RentalsController < Api::ApplicationController
   def index
     @rentals = Rental.where(owner: @api_user)
   
-    render json: @rentals, each_serializer: RentalsSerializer
+    # render json: @rentals, each_serializer: RentalsSerializer
+    render json: @rentals, class: { Rental: RentalSerializer }
   end
 
   # GET /api/rentals/1
   def show
-    render json: @rental
+    render jsonapi: @rental, class: { Rental: RentalSerializer }
   end
 
   # POST /api/rentals
@@ -20,7 +21,7 @@ class Api::RentalsController < Api::ApplicationController
     @rental = Rental.new(rental_params.except(:api_key).merge(owner: @api_user))
     
     if @rental.save
-      render json: @rental
+      render jsonapi: @rental, class: { Rental: RentalSerializer }
     else
       render json: { status: 422, message: @rental.errors.full_messages.first.to_s }, status: :unprocessable_entity
     end

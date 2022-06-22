@@ -1,2 +1,2 @@
-class ApplicationSerializer < ActiveModel::Serializer
+class ApplicationSerializer < JSONAPI::Serializable::Resource
 end

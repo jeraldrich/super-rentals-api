@@ -34,7 +34,8 @@ gem 'devise'
 gem 'devise-security'
 
 # Serializers (TODO: Switch with json rb)
-gem 'active_model_serializers'
+# gem 'active_model_serializers'
+gem 'jsonapi-rails'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
