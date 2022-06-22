@@ -22,7 +22,7 @@ end
 api_user = User.find_by(email: 'apiuser@superrentals.com') if api_user.nil?
 
 # Create rentals.
-10.times do
+20.times do
   rental = Rental.create!(
     owner: api_user,
     title: Faker::Address.full_address,
