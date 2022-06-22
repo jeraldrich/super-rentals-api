@@ -1,6 +1,3 @@
-Steadkey
-===================
-
 This repo contains the ember rentals api for [super-rentals](https://github.com/jeraldrich/super-rentals)
 
 Setup:
