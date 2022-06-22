@@ -1,24 +1,11 @@
-# README
+Steadkey
+===================
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This repo contains the ember rentals api for [super-rentals](https://github.com/jeraldrich/super-rentals)
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Setup:
+```
+bundle install
+bundle exec rake rake db:create; rake db:migrate; rake db:seed
+bundle exec rails s -p 5000 -b 0.0.0.0
+``
