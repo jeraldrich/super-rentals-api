@@ -5,7 +5,9 @@ class CreateRentals < ActiveRecord::Migration[5.0]
       t.references :user, index: true, foreign_key: true
       t.string :title
       t.string :city
-      t.string :location
+      # t.string :location #Json not exist in sqlite without ext.
+      t.float :lat
+      t.float :lng
       t.string :category
       t.string :image
       t.string :street_address

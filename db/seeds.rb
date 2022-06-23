@@ -21,17 +21,36 @@ unless User.exists?(email: 'apiuser@superrentals.com')
 end
 api_user = User.find_by(email: 'apiuser@superrentals.com') if api_user.nil?
 
+# Since sqlite does not use enum, just pick random el in choices.
+# Choices picked from example rentals json public/api/rentals.json in ember codebase.
+categories = ['Estate', 'Condo', 'Apartment'] # Townhouse def in choices, but no image.
+# Map category to example category image.
+category_images = {
+  'Estate': 'https://upload.wikimedia.org/wikipedia/commons/c/cb/Crane_estate_(5).jpg',
+  'Condo': 'https://upload.wikimedia.org/wikipedia/commons/2/20/Seattle_-_Barnes_and_Bell_Buildings.jpg',
+  'Apartment': 'https://upload.wikimedia.org/wikipedia/commons/f/f7/Wheeldon_Apartment_Building_-_Portland_Oregon.jpg'
+}
+start_lat = 47.6062
+start_lng = -122.3321
+
 # Create rentals.
 20.times do
+  # TODO: Use fake lat lng gem to avoid invalid lat lng error from mapbox.
+  # lat = rand(start_lat...start_lat + 0.1000)
+  # lng = rand(start_lng...start_lng - 0.1000)
+  category = categories.sample
+  category_image = category_images[category.to_sym]
+
   rental = Rental.create!(
     owner: api_user,
     title: Faker::Address.full_address,
     city: Faker::Address.city,
-    location: Faker::Address.street_address,
+    lat: start_lat,
+    lng: start_lng,
     street_address: Faker::Address.street_address,
-    category: Faker::House.room,
-    image: Faker::File.file_name(dir: 'spec/images', name: 'test_rental_image', ext: 'jpg'),
-    bedrooms: Faker::Number.number(digits: 1),
-    description: Faker::House.room
+    category: category,
+    image: category_image,
+    bedrooms: Faker::Number.number(digits: 1) + 1, # Add one to avoid 0 bedrooms.
+    description: Faker::House.room # TODO: Use diff faker, lorem maybe if used in frontend.
   )
 end

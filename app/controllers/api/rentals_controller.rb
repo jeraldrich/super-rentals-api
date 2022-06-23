@@ -7,8 +7,7 @@ class Api::RentalsController < Api::ApplicationController
   def index
     @rentals = Rental.where(owner: @api_user)
   
-    # render json: @rentals, each_serializer: RentalsSerializer
-    render json: @rentals, class: { Rental: RentalSerializer }
+    render jsonapi: @rentals, class: { Rental: RentalSerializer }
   end
 
   # GET /api/rentals/1

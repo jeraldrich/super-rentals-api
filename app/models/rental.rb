@@ -6,7 +6,8 @@
 #  user_id        :integer
 #  title          :string
 #  city           :string
-#  location       :string
+#  lat            :float
+#  lng            :float
 #  category       :string
 #  image          :string
 #  street_address :string
